@@ -100,6 +100,26 @@ List<T> concatAll(List<List<T>> const & xss)
     return result;
 }
 
+// List monad
+
+template<class A, class F>
+auto for_each(List<A> lst, F k) -> decltype(k(lst.front()))
+{
+    using B = decltype(k(lst.front()).front());
+    static_assert(std::is_convertible<
+        F, std::function<List<B>(A) >> ::value,
+        "for_each requires a function type List<B>(A)");
+
+    List<List<B>> lstLst = fmap(k, lst);
+    return concatAll(lstLst);
+}
+
+template<class A>
+List<A> yield(A a)
+{
+    return List<A>(a);
+}
+
 // consumes the list when called: 
 // forEach(std::move(lst), f);
 

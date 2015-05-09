@@ -1,5 +1,6 @@
 #include "StateList.h"
 #include <vector>
+#include <string>
 using namespace std;
 
 template<class A>
@@ -55,8 +56,22 @@ StateL<List<int>, tuple<int, int, int>> solve()
     }); }); }); }); }); }); }); }); });
 }
 
+void testMonad()
+{
+    List<int>    lst1{ 1, 2, 3,};
+    List<string> lst2{ "one", "two", "three" };
+
+    List<pair<int, string>> pairs =
+    for_each(lst1, [=](int i) { return
+    for_each(lst2, [=](string s) { return
+            yield(make_pair(i, s));
+    }); });
+    cout << pairs << endl;
+}
+
 int main()
 {
+    testMonad();
     List<int> lst{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     cout << evalStateL(solve(), lst);
     return 0;
