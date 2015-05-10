@@ -97,8 +97,6 @@ StateL<void*> guard(bool b)
         return mzero<void*>();
 }
 
-
-
 template<class S, class A>
 std::ostream& operator<<(std::ostream& os, pair<A, S> const & p)
 {
