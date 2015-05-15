@@ -33,21 +33,25 @@ asNumber = foldl (\t o -> t*10 + o) 0
 -- -----------
 --   M O N E Y
 
-main :: IO ()
-main = print $ flip evalStateL [0..9] $ do
-    s <- StateL select
-    e <- StateL select
-    n <- StateL select
-    d <- StateL select
-    m <- StateL select
-    o <- StateL select
-    r <- StateL select
-    y <- StateL select
-    guard $ s /= 0 && m /= 0
+solve = do
+    s <- sel
+    e <- sel
+    n <- sel
+    d <- sel
+    m <- sel
+    o <- sel
+    r <- sel
+    y <- sel
+    guard (s /= 0 && m /= 0)
     let send  = asNumber [s,e,n,d]
         more  = asNumber [m,o,r,e]
         money = asNumber [m,o,n,e,y]
-    guard $ send + more == money
+    guard (send + more == money)
     return (send, more, money)
+  where sel = StateL select
+
+main :: IO ()
+main = print $ evalStateL solve [0..9] 
 
 test = StateL select >>= (\x -> StateL select >>= \y -> return (x, y))
+

@@ -4,6 +4,7 @@
 using namespace std;
 
 enum ItemType { Plus, Minus, Num };
+
 struct Item
 {
     ItemType _type;
