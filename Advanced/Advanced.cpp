@@ -11,10 +11,10 @@ using namespace std;
 // select(x:xs) = (x, xs) : [(y, x:ys) | (y, ys) <-select xs]
 
 template<class A>
-PList<A> select(List<A> lst)
+PairList<A> select(List<A> lst)
 {
     if (lst.isEmpty())
-        return PList<A>();
+        return PairList<A>();
 
     A       x = lst.front();
     List<A> xs = lst.popped_front();
@@ -72,11 +72,11 @@ string nub(string const & str)
 }
 
 /*
-solve :: StateL [Int] (Int, Int, Int)
-solve = StateL select >>= go (nub "sendmoremoney") M.empty
+solve :: StateList [Int] (Int, Int, Int)
+solve = StateList select >>= go (nub "sendmoremoney") M.empty
   where
     go [c] subst i = prune (M.insert c i subst)
-    go (c:cs) subst i = StateL select >>= go cs (M.insert c i subst)
+    go (c:cs) subst i = StateList select >>= go cs (M.insert c i subst)
     prune subst = do
         guard (get 's' /= 0 && get 'm' /= 0)
         let send  = toNumber "send"
@@ -90,7 +90,7 @@ solve = StateL select >>= go (nub "sendmoremoney") M.empty
         asNumber = foldl (\t o -> t*10 + o) 0
 */
 
-StateL<tuple<int, int, int>> prune(Map subst)
+StateList<tuple<int, int, int>> prune(Map subst)
 {
     return mthen(guard(get(subst, 's') != 0 && get(subst, 'm') != 0), [=]() {
         int send = toNumber(subst, "send");
@@ -103,10 +103,10 @@ StateL<tuple<int, int, int>> prune(Map subst)
 }
 
 // go[c] subst i = prune(M.insert c i subst)
-// go(c:cs) subst i = StateL select >>= go cs(M.insert c i subst)
-StateL<tuple<int, int, int>> go(string str, Map subst, int i)
+// go(c:cs) subst i = StateList select >>= go cs(M.insert c i subst)
+StateList<tuple<int, int, int>> go(string str, Map subst, int i)
 {
-    StateL<int> sel = &select<int>;
+    StateList<int> sel = &select<int>;
 
     assert(str.length() > 0);
     if (str.length() == 1)
@@ -120,11 +120,11 @@ StateL<tuple<int, int, int>> go(string str, Map subst, int i)
     }
 }
 
-// solve = StateL select >>= go (nub "sendmoremoney") M.empty
+// solve = StateList select >>= go (nub "sendmoremoney") M.empty
 
-StateL<tuple<int, int, int>> solve()
+StateList<tuple<int, int, int>> solve()
 {
-    StateL<int> sel = &select<int>;
+    StateList<int> sel = &select<int>;
     Map subst;
     return mbind(sel, [=](int s) {
         return go(nub("sendmoremoney"), subst, s);
@@ -134,6 +134,6 @@ StateL<tuple<int, int, int>> solve()
 int main()
 {
     List<int> lst{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-    cout << evalStateL(solve(), lst);
+    cout << evalStateList(solve(), lst);
     return 0;
 }

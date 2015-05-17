@@ -4,10 +4,10 @@
 using namespace std;
 
 template<class A>
-PList<List<A>, A> select(List<A> lst)
+PairList<List<A>, A> select(List<A> lst)
 {
     if (lst.isEmpty())
-        return PList<List<A>, A>();
+        return PairList<List<A>, A>();
 
     A       x  = lst.front();
     List<A> xs = lst.popped_front();
@@ -34,9 +34,9 @@ int asNumber(vector<int> const & v)
     return acc;
 }
 
-StateL<List<int>, tuple<int, int, int>> solve()
+StateList<List<int>, tuple<int, int, int>> solve()
 {
-    StateL<List<int>, int> sel = &select<int>;
+    StateList<List<int>, int> sel = &select<int>;
 
     return mbind(sel, [=](int s) {
     return mbind(sel, [=](int e) {
@@ -73,6 +73,6 @@ int main()
 {
     testMonad();
     List<int> lst{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-    cout << evalStateL(solve(), lst);
+    cout << evalStateList(solve(), lst);
     return 0;
 }

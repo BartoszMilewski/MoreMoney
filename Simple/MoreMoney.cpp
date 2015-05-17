@@ -7,10 +7,10 @@ using namespace std;
 // select(x:xs) = (x, xs) : [(y, x:ys) | (y, ys) <-select xs]
 
 template<class A>
-PList<A> select(List<A> lst)
+PairList<A> select(List<A> lst)
 {
     if (lst.isEmpty())
-        return PList<A>();
+        return PairList<A>();
 
     A       x = lst.front();
     List<A> xs = lst.popped_front();
@@ -48,9 +48,9 @@ int asNumber(vector<int> const & v)
 }
 
 
-StateL<pair<int, int>> testBind()
+StateList<pair<int, int>> testBind()
 {
-    StateL<int> st = &select<int>;
+    StateList<int> st = &select<int>;
     return mbind(st, [st](int x) {
         return mbind(st, [x](int y) {
             return mreturn(make_pair(x, y));
@@ -58,7 +58,7 @@ StateL<pair<int, int>> testBind()
     });
 }
 
-StateL<int> testThen()
+StateList<int> testThen()
 {
     return mthen(mzero<int>(), []() {
         cout << "Ignoring\n";
@@ -66,9 +66,9 @@ StateL<int> testThen()
     });
 }
 
-StateL<int> testGuard()
+StateList<int> testGuard()
 {
-    StateL<int> st = &select<int>;
+    StateList<int> st = &select<int>;
     return mbind(st, [](int x) {
         return mthen(guard(x > 2), [x]() {
             return mreturn(x);
@@ -77,14 +77,14 @@ StateL<int> testGuard()
 
 }
 
-    //s <-StateL select
-    //e <-StateL select
-    //n <-StateL select
-    //d <-StateL select
-    //m <-StateL select
-    //o <-StateL select
-    //r <-StateL select
-    //y <-StateL select
+    //s <-StateList select
+    //e <-StateList select
+    //n <-StateList select
+    //d <-StateList select
+    //m <-StateList select
+    //o <-StateList select
+    //r <-StateList select
+    //y <-StateList select
     //guard $ s /= 0 && m /= 0
     //let send = asNumber[s, e, n, d]
     //more = asNumber[m, o, r, e]
@@ -93,9 +93,9 @@ StateL<int> testGuard()
     //return (send, more, money)
 
 
-StateL<tuple<int, int, int>> solve()
+StateList<tuple<int, int, int>> solve()
 {
-    StateL<int> sel = &select<int>;
+    StateList<int> sel = &select<int>;
 
     return mbind(sel, [=](int s) {
     return mbind(sel, [=](int e) {
@@ -122,23 +122,23 @@ int main()
 {
     List<int> lst{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     /*
-    StateL<int> st = &select<int>;
-    PList<int> sel = runStateL(st, lst);
+    StateList<int> st = &select<int>;
+    PairList<int> sel = runStateList(st, lst);
     cout << sel;
     cout << endl;
-    cout << evalStateL(st, lst);
+    cout << evalStateList(st, lst);
     cout << endl;
-    cout << runStateL(mreturn<int>(42), lst);
+    cout << runStateList(mreturn<int>(42), lst);
     cout << endl;
-    cout << evalStateL(testBind(), lst);
+    cout << evalStateList(testBind(), lst);
     cout << endl;
-    cout << evalStateL(testThen(), lst);
+    cout << evalStateList(testThen(), lst);
     cout << endl;
-    cout << evalStateL(testGuard(), lst);
+    cout << evalStateList(testGuard(), lst);
     cout << endl;
     cout << asNumber(lst);
     cout << endl;
     */
-    cout << evalStateL(solve(), lst);
+    cout << evalStateList(solve(), lst);
     return 0;
 }
